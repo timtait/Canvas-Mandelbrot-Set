@@ -1,115 +1,115 @@
 <!doctype html>
 <html>
-	<head>		
-		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.0/jquery.min.js"></script>
-		<script type="text/javascript">
-			var c, ctx;
-	
-			$(document).ready(function() {
-				c = document.getElementById("c");
-				ctx = c.getContext("2d");
-				$('#btnRun').click(function() {
-					makeMandel();
-				});
-		
-				$('#max').val('80');
-				$('#xi0').val('-2.5');
-				$('#xi1').val('1');
-				$('#yi0').val('-1');
-				$('#yi1').val('1');
-				$('#r').val('0');
-				$('#g').val('0');
-				$('#b').val('255');				
-			});
-	
-			function makeMandel() {
-				var x0,y0,x,y,xtemp,iteration,cp,pixel;
-				var max_iteration = parseInt($('#max').val());
-	
-				var xi0 = parseFloat($('#xi0').val());
-				var xi1 = parseFloat($('#xi1').val());
-				var yi0 = parseFloat($('#yi0').val());
-				var yi1 = parseFloat($('#yi1').val());
-			
-				var r = parseFloat($('#r').val());
-				var g = parseFloat($('#g').val());
-				var b = parseFloat($('#b').val());
-				
-				var difx = xi1-xi0;
-				var dify = yi1-yi0;
-								
+  <head>    
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.0/jquery.min.js"></script>
+    <script type="text/javascript">
+      var c, ctx;
+  
+      $(document).ready(function() {
+        c = document.getElementById("c");
+        ctx = c.getContext("2d");
+        $('#btnRun').click(function() {
+          makeMandel();
+        });
+    
+        $('#max').val('80');
+        $('#xi0').val('-2.5');
+        $('#xi1').val('1');
+        $('#yi0').val('-1');
+        $('#yi1').val('1');
+        $('#r').val('0');
+        $('#g').val('0');
+        $('#b').val('255');       
+      });
+  
+      function makeMandel() {a
+        var x0,y0,x,y,xtemp,iteration,cp,pixel;
+        var max_iteration = parseInt($('#max').val());
+  
+        var xi0 = parseFloat($('#xi0').val());
+        var xi1 = parseFloat($('#xi1').val());
+        var yi0 = parseFloat($('#yi0').val());
+        var yi1 = parseFloat($('#yi1').val());
+      
+        var r = parseFloat($('#r').val());
+        var g = parseFloat($('#g').val());
+        var b = parseFloat($('#b').val());
+        
+        var difx = xi1-xi0;
+        var dify = yi1-yi0;
+                
         ctx.fillStyle = "rgb(0,0,0)";
         ctx.fillRect(0,0,c.width,c.height);        
         
         
-				var myImageData = ctx.getImageData(0,0, c.width, c.height);
-	
-				for (var i = 0; i < c.width; i++) {
-					for (var j = 0; j < c.height; j++) {
-						x0 = xi0+(difx*(i/c.width));
-						y0 = yi0+(dify*(j/c.height));
-	
-						x = y = iteration = 0;
-	
-						while (x*x + y*y <= 4 && iteration < max_iteration)
-						{
-							xtemp = x*x - y*y + x0;
-							y = 2*x*y + y0;
-	
-							x = xtemp;
+        var myImageData = ctx.getImageData(0,0, c.width, c.height);
+  
+        for (var i = 0; i < c.width; i++) {
+          for (var j = 0; j < c.height; j++) {
+            x0 = xi0+(difx*(i/c.width));
+            y0 = yi0+(dify*(j/c.height));
+  
+            x = y = iteration = 0;
+  
+            while (x*x + y*y <= 4 && iteration < max_iteration)
+            {
+              xtemp = x*x - y*y + x0;
+              y = 2*x*y + y0;
+  
+              x = xtemp;
 
-							iteration++;
-						}
-	
-						x0 = ((-xi0+x0)/difx)*c.width;
-						y0 = ((yi1+y0)/dify)*c.height;
-	
-						if ( iteration != max_iteration ) {
-							cp = (iteration/max_iteration);
-				      pixel = Math.round((y0*c.width + x0)*4);
+              iteration++;
+            }
+  
+            x0 = ((-xi0+x0)/difx)*c.width;
+            y0 = ((yi1+y0)/dify)*c.height;
+  
+            if ( iteration != max_iteration ) {
+              cp = (iteration/max_iteration);
+              pixel = Math.round((y0*c.width + x0)*4);
               myImageData.data[pixel] = cp*r;
               myImageData.data[pixel + 1] = cp*g;
               myImageData.data[pixel + 2] = cp*b;
               //myImageData.data[pixel + 3] = cp*255; //alpha
-						}
-					}
-				}
+            }
+          }
+        }
         ctx.putImageData(myImageData, 0, 0);        
-			}
+      }
       
       function saveAsPNG() {
         window.location = c.toDataURL("image/png");
       }
-		</script>
-		<style>
-			input {width:50px;}
-		</style>
-	</head>
-	
-	<body>	
-		<table cellspacing=5>
-			<tr>
-				<td>max iterations: <input type="text" id="max"/></td>
-				<td>
-					<table>
-						<tr><td></td><td>yi0: <input type="text" id="yi0"/></td><td></td></tr>
-						<tr><td>xi0: <input type="text" id="xi0"/></td><td></td><td>xi1: <input type="text" id="xi1"/></td><td></td></tr>
-						<tr><td></td><td>yi1: <input type="text" id="yi1"/><br /></td><td></td></tr>
-					</table>
-				</td>
-				<td>
-					r: <input type="text" id="r"/><br />
-					g: <input type="text" id="g"/><br />	
-					b: <input type="text" id="b"/>
-				</td>
-				<td>
-					<input type="submit" value="Run" id="btnRun" />
-				</td>
-			</tr>
-		</table>		
-		
-		<div>
-			<canvas id="c" width="497" height="284" style="border:1px solid #000;">	
-		</div>
-	</body>
+    </script>
+    <style>
+      input {width:50px;}
+    </style>
+  </head>
+  
+  <body>  
+    <table cellspacing=5>
+      <tr>
+        <td>max iterations: <input type="text" id="max"/></td>
+        <td>
+          <table>
+            <tr><td></td><td>yi0: <input type="text" id="yi0"/></td><td></td></tr>
+            <tr><td>xi0: <input type="text" id="xi0"/></td><td></td><td>xi1: <input type="text" id="xi1"/></td><td></td></tr>
+            <tr><td></td><td>yi1: <input type="text" id="yi1"/><br /></td><td></td></tr>
+          </table>
+        </td>
+        <td>
+          r: <input type="text" id="r"/><br />
+          g: <input type="text" id="g"/><br />  
+          b: <input type="text" id="b"/>
+        </td>
+        <td>
+          <input type="submit" value="Run" id="btnRun" />
+        </td>
+      </tr>
+    </table>    
+    
+    <div>
+      <canvas id="c" width="497" height="284" style="border:1px solid #000;"> 
+    </div>
+  </body>
 </html>
